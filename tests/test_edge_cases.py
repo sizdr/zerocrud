@@ -1,7 +1,7 @@
 import pytest
 from ..src.zerocrud import CRUDBase
 from ..src.zerocrud.exceptions import ModelTypeRequiredError
-from pydantic_core import ValidationError
+from pydantic import ValidationError
 
 class TestEdgeCases:
     """Test edge cases and error conditions"""
