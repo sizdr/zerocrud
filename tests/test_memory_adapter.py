@@ -4,8 +4,10 @@ Inherits the base suite and adds implementation-specific tests.
 """
 import pytest
 from .conftest import User
+from sqlmodel import SQLModel, Field
 from .test_adapters import AdapterTestSuite
 from ..src.zerocrud.adapters import MemoryAdapter
+from ..src.zerocrud import CRUDBase
 
 class TestMemoryAdapter(AdapterTestSuite):
     """Specific tests for MemoryAdapter."""
@@ -52,3 +54,20 @@ class TestMemoryAdapter(AdapterTestSuite):
         # Counter adjusts
         next_user = adapter.create({"name": "NextUser", "email": "next@test.com"})
         assert next_user.id == 101  # Counter continued from where it was
+
+
+    def test_id_none_defined(self, adapter):
+        class Item(SQLModel):
+            id: int = Field(default=None, primary_key=True)
+            price:  float
+
+        class ItemRepository(CRUDBase[Item]):
+            pass
+
+        item_repo = ItemRepository()
+
+        fake_data = {"price":10, "id":None}
+        fake_data_2 = {"price":5, "id":0}
+
+        assert item_repo.create(fake_data).id == 1
+        assert item_repo.create(fake_data_2).id == 2
