@@ -210,13 +210,24 @@ class MemoryAdapter(CRUDAdapter):
             ```
         """
 
-        if ("id" in data) and (data["id"] > self._counter + 1):
-            self._counter = data["id"] + 1
+        if "id" in data and data["id"] is not None:
+            if (data["id"] > self._counter):
+                self._counter = data["id"] + 1
+            else: 
+                data["id"] = self._counter
+                self._counter += 1
 
         # Auto-assign ID if not provided
-        if "id" not in data:
+        if "id" not in data or data["id"] is None:
             data["id"] = self._counter
             self._counter += 1
+
+        
+
+        print(data)
+        print(data["id"])
+
+        print(f"Counter: {self._counter}")
            
         # Validate data using SQLModel validation
         item = self.model.model_validate(data)
