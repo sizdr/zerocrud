@@ -222,13 +222,6 @@ class MemoryAdapter(CRUDAdapter):
             data["id"] = self._counter
             self._counter += 1
 
-        
-
-        print(data)
-        print(data["id"])
-
-        print(f"Counter: {self._counter}")
-           
         # Validate data using SQLModel validation
         item = self.model.model_validate(data)
         self._data.append(item)
